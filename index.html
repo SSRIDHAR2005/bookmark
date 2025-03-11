@@ -73,11 +73,7 @@
 
     <script>
         // Load bookmarks from localStorage or initialize empty categories
-        const bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || { 
-            work: [], 
-            social: [], 
-            entertainment: [] 
-        };
+        let bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || { work: [], social: [], entertainment: [] };
 
         // Function to render bookmarks
         function renderBookmarks() {
@@ -113,12 +109,10 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const newBookmark = { name: formData.get('name'), url: formData.get('url') };
-
-            // Save to localStorage
             const category = formData.get('category');
-            bookmarks[category].push(newBookmark);
-            localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
 
+            bookmarks[category].push(newBookmark);
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks)); // Save to localStorage
             renderBookmarks();
             closeModal();
         });
@@ -126,12 +120,13 @@
         // Remove Bookmark
         function removeBookmark(category, index) {
             bookmarks[category].splice(index, 1);
-            localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks)); // Update localStorage
             renderBookmarks();
         }
 
-        // Load bookmarks on page load
-        document.addEventListener("DOMContentLoaded", renderBookmarks);
+        // Initialize: Load saved bookmarks when page loads
+        renderBookmarks();
     </script>
+
 </body>
 </html>
