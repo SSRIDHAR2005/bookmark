@@ -3,85 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Access Dashboard</title>
+    <title>Bookmark Manager</title>
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS for Styling (if used) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css">
 
-    <!-- Firebase SDK (Fixed) -->
+    <!-- Firebase SDK (Load before your script.js) -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
-
-    <!-- Your JavaScript File -->
-    <script defer src="script.js"></script>
-
-    <style>
-        .category-content { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
-        .hidden { display: none; }
-    </style>
 </head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
 
-<body class="bg-gray-100 min-h-screen text-gray-900">
+    <!-- Title -->
+    <h1 class="text-3xl font-bold mb-6">Bookmark Manager</h1>
 
-    <div class="max-w-5xl mx-auto px-6 py-10">
-        <!-- HEADER -->
-        <header class="flex items-center justify-between mb-8">
-            <h1 class="text-4xl font-bold text-gray-800">📌 Quick Access Dashboard</h1>
-            <button id="add-bookmark-btn" class="bg-blue-600 text-white px-5 py-3 rounded-lg flex items-center space-x-2 shadow-lg hover:bg-blue-700 transition">
-                <i class="ri-add-line text-lg"></i>
-                <span class="text-lg font-medium">Add Bookmark</span>
-            </button>
-        </header>
+    <!-- Button to Open Modal -->
+    <button id="add-bookmark-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">
+        + Add Bookmark
+    </button>
 
-        <!-- CATEGORY SECTIONS -->
-        <div class="space-y-6">
-            <div class="category-block bg-white rounded-xl shadow-md p-6 border border-gray-200" data-category="work">
-                <h2 class="text-2xl font-semibold text-gray-900 mb-3">💼 Work</h2>
-                <div class="category-content"></div>
-            </div>
-
-            <div class="category-block bg-white rounded-xl shadow-md p-6 border border-gray-200" data-category="social">
-                <h2 class="text-2xl font-semibold text-gray-900 mb-3">👥 Social</h2>
-                <div class="category-content"></div>
-            </div>
-
-            <div class="category-block bg-white rounded-xl shadow-md p-6 border border-gray-200" data-category="entertainment">
-                <h2 class="text-2xl font-semibold text-gray-900 mb-3">🎮 Entertainment</h2>
-                <div class="category-content"></div>
-            </div>
+    <!-- Bookmark Categories -->
+    <div class="mt-6 w-full max-w-2xl">
+        <div class="category-block bg-white p-4 rounded-lg shadow-md mb-4" data-category="work">
+            <h2 class="text-xl font-semibold mb-2">Work</h2>
+            <div class="category-content"></div>
+        </div>
+        <div class="category-block bg-white p-4 rounded-lg shadow-md mb-4" data-category="social">
+            <h2 class="text-xl font-semibold mb-2">Social</h2>
+            <div class="category-content"></div>
+        </div>
+        <div class="category-block bg-white p-4 rounded-lg shadow-md" data-category="entertainment">
+            <h2 class="text-xl font-semibold mb-2">Entertainment</h2>
+            <div class="category-content"></div>
         </div>
     </div>
 
-    <!-- ADD BOOKMARK MODAL -->
-    <div id="bookmark-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-            <h3 class="text-2xl font-semibold mb-4">➕ Add New Bookmark</h3>
-            <form id="bookmark-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Website Name</label>
-                    <input type="text" name="name" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">URL</label>
-                    <input type="url" name="url" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Category</label>
-                    <select name="category" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
-                        <option value="work">Work</option>
-                        <option value="social">Social</option>
-                        <option value="entertainment">Entertainment</option>
-                    </select>
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 transition" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Add Bookmark</button>
+    <!-- Bookmark Modal (Hidden by Default) -->
+    <div id="bookmark-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 class="text-2xl font-semibold mb-4">Add Bookmark</h2>
+            
+            <!-- Bookmark Form -->
+            <form id="bookmark-form">
+                <label class="block mb-2">Name:</label>
+                <input type="text" name="name" required class="w-full p-2 border rounded mb-4">
+                
+                <label class="block mb-2">URL:</label>
+                <input type="url" name="url" required class="w-full p-2 border rounded mb-4">
+                
+                <label class="block mb-2">Category:</label>
+                <select name="category" required class="w-full p-2 border rounded mb-4">
+                    <option value="work">Work</option>
+                    <option value="social">Social</option>
+                    <option value="entertainment">Entertainment</option>
+                </select>
+
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal()" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">
+                        Cancel
+                    </button>
+                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        Save
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Custom Script -->
+    <script src="script.js"></script>
 </body>
 </html>
