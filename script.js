@@ -1,3 +1,6 @@
+console.log("Firebase SDK Loaded?", typeof firebase !== "undefined");
+console.log("Firebase App:", firebase?.app?.());
+console.log("Firestore:", firebase?.firestore?.());
 const firebaseConfig = {
     apiKey: "AIzaSyAkCNwFrxwzknWTehVCTqkL6Xbj7qHDaA4",
     authDomain: "bookmark-70990.firebaseapp.com",
