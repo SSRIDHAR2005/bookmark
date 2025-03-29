@@ -1,13 +1,13 @@
-// ✅ Import Firebase (Using ES Modules for Firebase v9+)
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+// ✅ Check if Firebase is Available
+if (typeof firebase === "undefined") {
+    console.error("Firebase SDK not loaded. Check your script order.");
+} else {
+    console.log("Firebase SDK loaded successfully.");
+}
 
-// ✅ Use Global Firebase App (Initialized in index.html)
-const db = window.db;
+const db = firebase.firestore();
 
-// ✅ Debugging: Check Firebase
-console.log("Firestore Loaded:", db);
-
-// ✅ Open Modal (Fix Button Click Issue)
+// ✅ Open Modal
 document.getElementById('add-bookmark-btn').addEventListener('click', () => {
     console.log("Add Bookmark button clicked");
     document.getElementById('bookmark-modal').classList.remove('hidden');
@@ -18,7 +18,7 @@ function closeModal() {
     document.getElementById('bookmark-modal').classList.add('hidden');
     document.getElementById('bookmark-form').reset();
 }
-window.closeModal = closeModal;  // Make function accessible in index.html
+window.closeModal = closeModal;  // Ensure function is accessible
 
 // ✅ Load Bookmarks
 async function loadBookmarks() {
@@ -26,10 +26,10 @@ async function loadBookmarks() {
     const bookmarks = { work: [], social: [], entertainment: [] };
 
     try {
-        const snapshot = await getDocs(collection(db, "bookmarks"));
-        snapshot.forEach(docSnapshot => {
-            const data = docSnapshot.data();
-            bookmarks[data.category].push({ name: data.name, url: data.url, id: docSnapshot.id });
+        const snapshot = await db.collection("bookmarks").get();
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            bookmarks[data.category].push({ name: data.name, url: data.url, id: doc.id });
         });
         renderBookmarks(bookmarks);
     } catch (error) {
@@ -37,7 +37,7 @@ async function loadBookmarks() {
     }
 }
 
-// ✅ Render Bookmarks to UI
+// ✅ Render Bookmarks
 function renderBookmarks(bookmarks) {
     document.querySelectorAll('.category-block').forEach(block => {
         const category = block.dataset.category;
@@ -68,7 +68,7 @@ document.getElementById('bookmark-form').addEventListener('submit', async (e) =>
     };
 
     try {
-        await addDoc(collection(db, "bookmarks"), newBookmark);
+        await db.collection("bookmarks").add(newBookmark);
         console.log("Bookmark added:", newBookmark);
         loadBookmarks();
         closeModal();
@@ -80,14 +80,14 @@ document.getElementById('bookmark-form').addEventListener('submit', async (e) =>
 // ✅ Remove Bookmark
 async function removeBookmark(id) {
     try {
-        await deleteDoc(doc(db, "bookmarks", id));
+        await db.collection("bookmarks").doc(id).delete();
         console.log("Bookmark deleted:", id);
         loadBookmarks();
     } catch (error) {
         console.error("Error deleting bookmark:", error);
     }
 }
-window.removeBookmark = removeBookmark;  // Make function accessible in index.html
+window.removeBookmark = removeBookmark;  // Ensure function is accessible
 
 // ✅ Load bookmarks on page load
 document.addEventListener("DOMContentLoaded", loadBookmarks);
