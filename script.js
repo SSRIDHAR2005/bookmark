@@ -12,8 +12,7 @@ const firebaseConfig = {
   
 
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // Function to load bookmarks from Firestore
