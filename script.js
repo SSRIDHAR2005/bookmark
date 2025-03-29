@@ -1,11 +1,11 @@
 console.log("Firebase SDK Loaded?", typeof firebase !== "undefined");
 
-// ✅ Firebase Configuration (Fixed)
+// ✅ Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAkCNwFrxwzknWTehVCTqkL6Xbj7qHDaA4",
     authDomain: "bookmark-70990.firebaseapp.com",
     projectId: "bookmark-70990",
-    storageBucket: "bookmark-70990.appspot.com",  // ✅ Fixed
+    storageBucket: "bookmark-70990.appspot.com",
     messagingSenderId: "55612692639",
     appId: "1:55612692639:web:dff5b96802261fa1026aaa"
 };
@@ -14,11 +14,23 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// ✅ Check Firebase Initialization
+// ✅ Debugging: Check Firebase
 console.log("Firebase App:", firebase.app());
 console.log("Firestore:", firebase.firestore());
 
-// ✅ Load Bookmarks from Firestore
+// ✅ Open Modal (Fix Button Click Issue)
+document.getElementById('add-bookmark-btn').addEventListener('click', () => {
+    console.log("Add Bookmark button clicked");
+    document.getElementById('bookmark-modal').classList.remove('hidden');
+});
+
+// ✅ Close Modal
+function closeModal() {
+    document.getElementById('bookmark-modal').classList.add('hidden');
+    document.getElementById('bookmark-form').reset();
+}
+
+// ✅ Load Bookmarks
 async function loadBookmarks() {
     console.log("Loading bookmarks from Firestore...");
     const bookmarks = { work: [], social: [], entertainment: [] };
@@ -35,7 +47,7 @@ async function loadBookmarks() {
     }
 }
 
-// ✅ Render Bookmarks to the UI
+// ✅ Render Bookmarks to UI
 function renderBookmarks(bookmarks) {
     document.querySelectorAll('.category-block').forEach(block => {
         const category = block.dataset.category;
@@ -53,9 +65,11 @@ function renderBookmarks(bookmarks) {
     });
 }
 
-// ✅ Add Bookmark to Firestore
+// ✅ Add Bookmark
 document.getElementById('bookmark-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    console.log("Submit button clicked");
+
     const formData = new FormData(e.target);
     const newBookmark = {
         name: formData.get('name'),
@@ -66,28 +80,22 @@ document.getElementById('bookmark-form').addEventListener('submit', async (e) =>
     try {
         await db.collection("bookmarks").add(newBookmark);
         console.log("Bookmark added:", newBookmark);
-        loadBookmarks();  // Reload bookmarks after adding
+        loadBookmarks();
         closeModal();
     } catch (error) {
         console.error("Error adding bookmark:", error);
     }
 });
 
-// ✅ Remove Bookmark from Firestore
+// ✅ Remove Bookmark
 async function removeBookmark(id) {
     try {
         await db.collection("bookmarks").doc(id).delete();
         console.log("Bookmark deleted:", id);
-        loadBookmarks();  // Reload bookmarks after deletion
+        loadBookmarks();
     } catch (error) {
         console.error("Error deleting bookmark:", error);
     }
-}
-
-// ✅ Close Modal
-function closeModal() {
-    document.getElementById('bookmark-modal').classList.add('hidden');
-    document.getElementById('bookmark-form').reset();
 }
 
 // ✅ Load bookmarks on page load
