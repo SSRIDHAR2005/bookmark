@@ -4,20 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quick Access Dashboard</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css">
+
+    <!-- Firebase SDK (Fixed) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+
+    <!-- Your JavaScript File -->
+    <script defer src="script.js"></script>
+
     <style>
         .category-content { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
         .hidden { display: none; }
     </style>
 </head>
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
-
-<!-- Your Script -->
-<script defer src="script.js"></script>
 
 <body class="bg-gray-100 min-h-screen text-gray-900">
 
@@ -78,63 +82,6 @@
             </form>
         </div>
     </div>
-
-    <script>
-        // Load bookmarks from localStorage or initialize empty categories
-        let bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || { work: [], social: [], entertainment: [] };
-
-        // Function to render bookmarks
-        function renderBookmarks() {
-            document.querySelectorAll('.category-block').forEach(block => {
-                const category = block.dataset.category;
-                const container = block.querySelector('.category-content');
-                container.innerHTML = bookmarks[category].map((bookmark, index) => `
-                    <div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center shadow-md border border-gray-200 hover:shadow-lg transition">
-                        <div>
-                            <a href="${bookmark.url}" target="_blank" class="text-blue-600 text-lg font-medium hover:underline">${bookmark.name}</a>
-                        </div>
-                        <button onclick="removeBookmark('${category}', ${index})" class="text-red-500 hover:text-red-600 transition">
-                            <i class="ri-delete-bin-line text-xl"></i>
-                        </button>
-                    </div>
-                `).join('');
-            });
-        }
-
-        // Open Modal
-        document.getElementById('add-bookmark-btn').addEventListener('click', () => {
-            document.getElementById('bookmark-modal').classList.remove('hidden');
-        });
-
-        // Close Modal
-        function closeModal() {
-            document.getElementById('bookmark-modal').classList.add('hidden');
-            document.getElementById('bookmark-form').reset();
-        }
-
-        // Add Bookmark
-        document.getElementById('bookmark-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const newBookmark = { name: formData.get('name'), url: formData.get('url') };
-            const category = formData.get('category');
-
-            bookmarks[category].push(newBookmark);
-            localStorage.setItem('bookmarks', JSON.stringify(bookmarks)); // Save to localStorage
-            renderBookmarks();
-            closeModal();
-        });
-
-        // Remove Bookmark
-        function removeBookmark(category, index) {
-            bookmarks[category].splice(index, 1);
-            localStorage.setItem('bookmarks', JSON.stringify(bookmarks)); // Update localStorage
-            renderBookmarks();
-        }
-
-        // Initialize: Load saved bookmarks when page loads
-        renderBookmarks();
-    </script>
 
 </body>
 </html>
