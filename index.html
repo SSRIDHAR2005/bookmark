@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookmark Manager</title>
 
-    <!-- Tailwind CSS for Styling (if used) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Firebase SDK (Load before your script.js) -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+    <!-- ✅ Firebase SDK will be imported inside script.js (ES Module Syntax) -->
 </head>
 <body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
 
@@ -70,7 +68,8 @@
         </div>
     </div>
 
-    <!-- Custom Script -->
-    <script src="script.js"></script>
+    <!-- ✅ Load script.js AFTER page content -->
+    <script type="module" src="script.js"></script>
+
 </body>
 </html>
