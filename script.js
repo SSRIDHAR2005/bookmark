@@ -1,4 +1,6 @@
-console.log("Firebase SDK Loaded?", typeof firebase !== "undefined");
+// ✅ Import Firebase (Using ES Modules for Firebase v9+)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 // ✅ Firebase Configuration
 const firebaseConfig = {
@@ -10,13 +12,13 @@ const firebaseConfig = {
     appId: "1:55612692639:web:dff5b96802261fa1026aaa"
 };
 
-// ✅ Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// ✅ Initialize Firebase & Firestore
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 // ✅ Debugging: Check Firebase
-console.log("Firebase App:", firebase.app());
-console.log("Firestore:", firebase.firestore());
+console.log("Firebase SDK Loaded?", app);
+console.log("Firestore:", db);
 
 // ✅ Open Modal (Fix Button Click Issue)
 document.getElementById('add-bookmark-btn').addEventListener('click', () => {
@@ -36,10 +38,10 @@ async function loadBookmarks() {
     const bookmarks = { work: [], social: [], entertainment: [] };
 
     try {
-        const snapshot = await db.collection("bookmarks").get();
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            bookmarks[data.category].push({ name: data.name, url: data.url, id: doc.id });
+        const snapshot = await getDocs(collection(db, "bookmarks"));
+        snapshot.forEach(docSnapshot => {
+            const data = docSnapshot.data();
+            bookmarks[data.category].push({ name: data.name, url: data.url, id: docSnapshot.id });
         });
         renderBookmarks(bookmarks);
     } catch (error) {
@@ -78,7 +80,7 @@ document.getElementById('bookmark-form').addEventListener('submit', async (e) =>
     };
 
     try {
-        await db.collection("bookmarks").add(newBookmark);
+        await addDoc(collection(db, "bookmarks"), newBookmark);
         console.log("Bookmark added:", newBookmark);
         loadBookmarks();
         closeModal();
@@ -90,7 +92,7 @@ document.getElementById('bookmark-form').addEventListener('submit', async (e) =>
 // ✅ Remove Bookmark
 async function removeBookmark(id) {
     try {
-        await db.collection("bookmarks").doc(id).delete();
+        await deleteDoc(doc(db, "bookmarks", id));
         console.log("Bookmark deleted:", id);
         loadBookmarks();
     } catch (error) {
