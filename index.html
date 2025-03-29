@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookmark Manager</title>
 
-    <!-- Tailwind CSS for Styling -->
+    <!-- ✅ Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Firebase SDK (Modular Version for v9+) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    <!-- ✅ Firebase SDK (USE THIS FOR VERSION 8) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <!-- ✅ Firebase Configuration (Initialize Here) -->
+    <script>
+        console.log("Firebase SDK Loaded?", typeof firebase !== "undefined");
 
         // ✅ Firebase Configuration
         const firebaseConfig = {
@@ -23,22 +26,23 @@
             appId: "1:55612692639:web:dff5b96802261fa1026aaa"
         };
 
-        // ✅ Initialize Firebase & Firestore (Make Available Globally)
-        window.firebaseApp = initializeApp(firebaseConfig);
-        window.db = getFirestore(window.firebaseApp);
+        // ✅ Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        console.log("Firebase App:", firebase.app());
     </script>
+
+    <!-- ✅ Load External Script AFTER Firebase is Initialized -->
+    <script defer src="script.js"></script>
 </head>
 <body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
 
-    <!-- Title -->
     <h1 class="text-3xl font-bold mb-6">Bookmark Manager</h1>
 
-    <!-- Button to Open Modal -->
     <button id="add-bookmark-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">
         + Add Bookmark
     </button>
 
-    <!-- Bookmark Categories -->
     <div class="mt-6 w-full max-w-2xl">
         <div class="category-block bg-white p-4 rounded-lg shadow-md mb-4" data-category="work">
             <h2 class="text-xl font-semibold mb-2">Work</h2>
@@ -54,12 +58,10 @@
         </div>
     </div>
 
-    <!-- Bookmark Modal (Hidden by Default) -->
+    <!-- Bookmark Modal -->
     <div id="bookmark-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
             <h2 class="text-2xl font-semibold mb-4">Add Bookmark</h2>
-            
-            <!-- Bookmark Form -->
             <form id="bookmark-form">
                 <label class="block mb-2">Name:</label>
                 <input type="text" name="name" required class="w-full p-2 border rounded mb-4">
@@ -86,7 +88,5 @@
         </div>
     </div>
 
-    <!-- Load JavaScript File -->
-    <script type="module" src="script.js"></script>
 </body>
 </html>
