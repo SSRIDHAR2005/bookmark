@@ -5,10 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookmark Manager</title>
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS for Styling -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- ✅ Firebase SDK will be imported inside script.js (ES Module Syntax) -->
+    <!-- Firebase SDK (Modular Version for v9+) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+        // ✅ Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAkCNwFrxwzknWTehVCTqkL6Xbj7qHDaA4",
+            authDomain: "bookmark-70990.firebaseapp.com",
+            projectId: "bookmark-70990",
+            storageBucket: "bookmark-70990.appspot.com",
+            messagingSenderId: "55612692639",
+            appId: "1:55612692639:web:dff5b96802261fa1026aaa"
+        };
+
+        // ✅ Initialize Firebase & Firestore (Make Available Globally)
+        window.firebaseApp = initializeApp(firebaseConfig);
+        window.db = getFirestore(window.firebaseApp);
+    </script>
 </head>
 <body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
 
@@ -68,8 +86,7 @@
         </div>
     </div>
 
-    <!-- ✅ Load script.js AFTER page content -->
+    <!-- Load JavaScript File -->
     <script type="module" src="script.js"></script>
-
 </body>
 </html>
