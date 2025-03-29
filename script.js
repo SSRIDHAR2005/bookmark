@@ -1,24 +1,11 @@
 // ✅ Import Firebase (Using ES Modules for Firebase v9+)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-// ✅ Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyAkCNwFrxwzknWTehVCTqkL6Xbj7qHDaA4",
-    authDomain: "bookmark-70990.firebaseapp.com",
-    projectId: "bookmark-70990",
-    storageBucket: "bookmark-70990.appspot.com",
-    messagingSenderId: "55612692639",
-    appId: "1:55612692639:web:dff5b96802261fa1026aaa"
-};
-
-// ✅ Initialize Firebase & Firestore
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// ✅ Use Global Firebase App (Initialized in index.html)
+const db = window.db;
 
 // ✅ Debugging: Check Firebase
-console.log("Firebase SDK Loaded?", app);
-console.log("Firestore:", db);
+console.log("Firestore Loaded:", db);
 
 // ✅ Open Modal (Fix Button Click Issue)
 document.getElementById('add-bookmark-btn').addEventListener('click', () => {
@@ -31,6 +18,7 @@ function closeModal() {
     document.getElementById('bookmark-modal').classList.add('hidden');
     document.getElementById('bookmark-form').reset();
 }
+window.closeModal = closeModal;  // Make function accessible in index.html
 
 // ✅ Load Bookmarks
 async function loadBookmarks() {
@@ -99,6 +87,7 @@ async function removeBookmark(id) {
         console.error("Error deleting bookmark:", error);
     }
 }
+window.removeBookmark = removeBookmark;  // Make function accessible in index.html
 
 // ✅ Load bookmarks on page load
 document.addEventListener("DOMContentLoaded", loadBookmarks);
